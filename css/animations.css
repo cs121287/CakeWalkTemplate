@@ -1,0 +1,147 @@
+/* Animation styles */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modal animations */
+.modal {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.modal.modal-open {
+    opacity: 1;
+}
+
+/* Product card hover effect */
+.product-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    top: var(--mouse-y, 0);
+    left: var(--mouse-x, 0);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.product-card:hover::after {
+    opacity: 1;
+}
+
+/* Form animations */
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 1rem;
+    color: #666;
+    background: white;
+    padding: 0 0.5rem;
+}
+
+.form-group.focused label {
+    top: -0.75rem;
+    left: 0.5rem;
+    font-size: 0.8rem;
+    color: #ff6666;
+}
+
+.error-message {
+    color: #ff4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.form-group.invalid .error-message {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Success message animation */
+.success-message {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Typing cursor animation */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.typing::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+}
+
+/* Navigation highlight effect */
+nav a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #ff6666;
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Button pulse animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 102, 102, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 102, 102, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 102, 102, 0);
+    }
+}
+
+.submit-btn:focus {
+    animation: pulse 1.5s infinite;
+}
