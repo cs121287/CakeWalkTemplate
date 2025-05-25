@@ -22,23 +22,39 @@ function debounce(func, wait) {
     };
 }
 
-// Scroll Animation for sections
-function handleScrollAnimations() {
-    document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        if (isInViewport(element)) {
-            element.classList.add('animate');
+// Parallax effect for background
+function handleParallax() {
+    const parallaxBg = document.querySelector('.parallax-bg');
+    if (parallaxBg) {
+        const scrolled = window.pageYOffset;
+        parallaxBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+}
+
+// Section visibility and animations
+function handleSectionVisibility() {
+    document.querySelectorAll('.section-content').forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const triggerPoint = window.innerHeight * 0.75;
+
+        if (rect.top < triggerPoint) {
+            section.classList.add('visible');
         }
     });
 }
 
-// Parallax effect for services section
-function handleParallax() {
-    const servicesImage = document.querySelector('.services-image');
-    if (servicesImage) {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * 0.1;
-        servicesImage.style.transform = `translateY(${Math.min(rate, 100)}px)`;
-    }
+// Update active navigation link
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('.snap-section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom >= 150) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            navLinks[index].classList.add('active');
+        }
+    });
 }
 
 // Typing effect for welcome message
@@ -121,7 +137,6 @@ function setupContactForm() {
     const inputs = form.querySelectorAll('input, textarea');
 
     inputs.forEach(input => {
-        // Add floating label effect
         if (input.value) {
             input.parentElement.classList.add('focused');
         }
@@ -226,9 +241,13 @@ function setupScrolling() {
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
         progressBar.style.width = scrolled + '%';
+        
+        handleParallax();
+        handleSectionVisibility();
+        updateActiveNavLink();
     }, 10));
 
-    document.querySelectorAll('nav a').forEach(anchor => {
+    document.querySelectorAll('.nav-link').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
@@ -246,12 +265,6 @@ function setupScrolling() {
 
 // Initialize all features
 document.addEventListener('DOMContentLoaded', () => {
-    // Add animation classes to elements
-    document.querySelectorAll('section').forEach(section => {
-        section.classList.add('animate-on-scroll');
-    });
-
-    // Setup all features
     setupProductCards();
     setupModal();
     setupContactForm();
@@ -265,12 +278,13 @@ document.addEventListener('DOMContentLoaded', () => {
         typeWriter(welcomeHeading, originalText);
     }
 
-    // Add scroll event listeners
-    const handleScroll = debounce(() => {
-        handleScrollAnimations();
-        handleParallax();
-    }, 10);
+    // Initial section visibility check
+    handleSectionVisibility();
+    updateActiveNavLink();
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check for elements in viewport
+    // Initialize first section as visible
+    const firstSection = document.querySelector('.section-content');
+    if (firstSection) {
+        firstSection.classList.add('visible');
+    }
 });
