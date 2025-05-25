@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake Walk Baking Co.</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#products">Our Products</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <section id="services">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-container">
+                <div class="services-text">
+                    <h3>Welcome to Cake Walk Baking Co.</h3>
+                    <p>At Cake Walk Baking Co., we believe that every occasion deserves the perfect sweet treat. Our passionate team of expert bakers crafts each item with love and attention to detail, using only the finest ingredients to create unforgettable desserts.</p>
+                    <p>We specialize in custom cakes, wedding cakes, cupcakes, pastries, and more. Whether you're celebrating a birthday, wedding, or just craving something sweet, we're here to make your dessert dreams come true.</p>
+                    <p>Our commitment to quality and creativity has made us a trusted name in the local community, and we take pride in being part of your special moments.</p>
+                </div>
+                <div class="services-image">
+                    <img src="img/bakery-interior.jpg" alt="Our Bakery Interior">
+                </div>
+            </div>
+        </section>
+
+        <section id="products">
+            <h2 class="section-title">Our Products</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="img/wedding-cake.jpg" alt="Wedding Cake">
+                    <h3>Wedding Cakes</h3>
+                    <p>Custom-designed wedding cakes for your special day</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/cupcakes.jpg" alt="Cupcakes">
+                    <h3>Cupcakes</h3>
+                    <p>Variety of flavors and decorative designs</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/birthday-cake.jpg" alt="Birthday Cake">
+                    <h3>Birthday Cakes</h3>
+                    <p>Personalized cakes for all ages</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/pastries.jpg" alt="Pastries">
+                    <h3>Pastries</h3>
+                    <p>Fresh-baked daily pastries and treats</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/cookies.jpg" alt="Cookies">
+                    <h3>Cookies</h3>
+                    <p>Classic and custom-designed cookies</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/special-occasions.jpg" alt="Special Occasions">
+                    <h3>Special Occasions</h3>
+                    <p>Custom desserts for any celebration</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Visit Us</h3>
+                    <p>123 Baker Street</p>
+                    <p>Sweetville, CA 90210</p>
+                    <p>Phone: (555) 123-4567</p>
+                    <h3>Hours of Operation</h3>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 5:00 PM</p>
+                    <p>Sunday: Closed</p>
+                    <div class="map-container">
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            frameborder="0"
+                            style="border:0"
+                            src="https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=123+Baker+Street,Sweetville+CA"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Send Us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message:</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <footer>
+        <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
+        <p>&copy; 2025 Cake Walk Baking Co. All rights reserved.</p>
+    </footer>
+</body>
+</html>
