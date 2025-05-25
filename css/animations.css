@@ -10,6 +10,18 @@
     transform: translateY(0);
 }
 
+/* Section Fade Effect */
+.section-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Modal animations */
 .modal {
     transition: opacity 0.3s ease-in-out;
@@ -103,18 +115,6 @@
     }
 }
 
-/* Typing cursor animation */
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-.typing::after {
-    content: '|';
-    animation: blink 1s step-end infinite;
-}
-
 /* Navigation highlight effect */
 nav a::after {
     content: '';
@@ -127,6 +127,48 @@ nav a::after {
 
 nav a:hover::after {
     width: 100%;
+}
+
+/* Active section indicator */
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Typing cursor animation */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.typing::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+}
+
+/* Parallax animation */
+@keyframes parallaxScroll {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-50%);
+    }
+}
+
+/* Section transition animations */
+.snap-section {
+    transition: transform 0.6s ease-out;
+}
+
+.snap-section.entering {
+    transform: translateY(50px);
+    opacity: 0;
+}
+
+.snap-section.visible {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 /* Button pulse animation */
@@ -144,4 +186,21 @@ nav a:hover::after {
 
 .submit-btn:focus {
     animation: pulse 1.5s infinite;
+}
+
+/* Scroll indicator animation */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.scroll-indicator {
+    animation: bounce 2s infinite;
 }
