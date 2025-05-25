@@ -27,7 +27,9 @@ function handleParallax() {
     const parallaxBg = document.querySelector('.parallax-bg');
     if (parallaxBg) {
         const scrolled = window.pageYOffset;
-        parallaxBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+        const scale = 1 + (scrolled * 0.0002);
+        const yPos = -(scrolled * 0.5);
+        parallaxBg.style.transform = `translate3d(0, ${yPos}px, 0) scale(${scale})`;
     }
 }
 
@@ -230,35 +232,114 @@ function validateInput(input) {
     return isValid;
 }
 
-// Smooth scrolling with progress indicator
+// Enhanced smooth scrolling with snap effect
 function setupScrolling() {
+    const snapContainer = document.querySelector('.snap-container');
     const progressBar = document.createElement('div');
     progressBar.className = 'scroll-progress';
     document.body.appendChild(progressBar);
 
-    window.addEventListener('scroll', debounce(() => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let isScrolling = false;
+    let lastScrollTime = 0;
+    const scrollCooldown = 1000; // ms between scroll actions
+
+    function smoothScrollTo(element) {
+        const now = Date.now();
+        if (now - lastScrollTime < scrollCooldown) return;
+        
+        lastScrollTime = now;
+        isScrolling = true;
+        
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+
+        setTimeout(() => {
+            isScrolling = false;
+        }, scrollCooldown);
+    }
+
+    // Wheel event handler
+    snapContainer.addEventListener('wheel', (e) => {
+        if (isScrolling) {
+            e.preventDefault();
+            return;
+        }
+
+        const direction = e.deltaY > 0 ? 1 : -1;
+        const sections = Array.from(document.querySelectorAll('.snap-section'));
+        const currentSection = sections.find(section => {
+            const rect = section.getBoundingClientRect();
+            return rect.top >= -100 && rect.top <= 100;
+        });
+
+        if (currentSection) {
+            e.preventDefault();
+            const currentIndex = sections.indexOf(currentSection);
+            const targetIndex = currentIndex + direction;
+
+            if (targetIndex >= 0 && targetIndex < sections.length) {
+                smoothScrollTo(sections[targetIndex]);
+            }
+        }
+    }, { passive: false });
+
+    // Touch events for mobile
+    let touchStartY = 0;
+    snapContainer.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    snapContainer.addEventListener('touchmove', (e) => {
+        if (isScrolling) {
+            e.preventDefault();
+            return;
+        }
+
+        const touchCurrentY = e.touches[0].clientY;
+        const diff = touchStartY - touchCurrentY;
+        const sections = Array.from(document.querySelectorAll('.snap-section'));
+        const currentSection = sections.find(section => {
+            const rect = section.getBoundingClientRect();
+            return rect.top >= -100 && rect.top <= 100;
+        });
+
+        if (currentSection && Math.abs(diff) > 50) {
+            e.preventDefault();
+            const currentIndex = sections.indexOf(currentSection);
+            const targetIndex = currentIndex + (diff > 0 ? 1 : -1);
+
+            if (targetIndex >= 0 && targetIndex < sections.length) {
+                smoothScrollTo(sections[targetIndex]);
+            }
+            touchStartY = touchCurrentY;
+        }
+    }, { passive: false });
+
+    // Update scroll progress and handle animations
+    snapContainer.addEventListener('scroll', debounce(() => {
+        const winScroll = snapContainer.scrollTop;
+        const height = snapContainer.scrollHeight - snapContainer.clientHeight;
         const scrolled = (winScroll / height) * 100;
-        progressBar.style.width = scrolled + '%';
+        progressBar.style.width = `${scrolled}%`;
         
         handleParallax();
         handleSectionVisibility();
         updateActiveNavLink();
     }, 10));
 
+    // Navigation click handling
     document.querySelectorAll('.nav-link').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
             
-            targetSection.scrollIntoView({
-                behavior: 'smooth'
-            });
-
-            // Update URL without jump
-            history.pushState(null, null, targetId);
+            if (targetSection) {
+                smoothScrollTo(targetSection);
+                history.pushState(null, null, targetId);
+            }
         });
     });
 }
