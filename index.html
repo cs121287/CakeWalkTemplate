@@ -6,7 +6,11 @@
     <title>Cake Walk Baking Co.</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="js/main.js" defer></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 </head>
 <body>
     <div class="parallax-bg"></div>
@@ -25,8 +29,17 @@
             </div>
         </header>
 
+        <!-- Dot Navigation -->
+        <nav class="dot-nav" aria-label="Section navigation">
+            <ul>
+                <li><button class="dot-nav-btn active" data-target="#services" aria-label="Go to Our Services section"></button></li>
+                <li><button class="dot-nav-btn" data-target="#products" aria-label="Go to Our Products section"></button></li>
+                <li><button class="dot-nav-btn" data-target="#contact" aria-label="Go to Contact Us section"></button></li>
+            </ul>
+        </nav>
+
         <main class="snap-container">
-            <section id="services" class="snap-section">
+            <section id="services" class="snap-section" tabindex="0">
                 <div class="section-content animate-on-scroll">
                     <h2 class="section-title">Our Services</h2>
                     <div class="services-container">
@@ -43,45 +56,63 @@
                 </div>
             </section>
 
-            <section id="products" class="snap-section">
+            <section id="products" class="snap-section" tabindex="0">
                 <div class="section-content animate-on-scroll">
                     <h2 class="section-title">Our Products</h2>
-                    <div class="products-grid">
-                        <div class="product-card">
-                            <img src="img/img1.png" alt="Wedding Cake">
-                            <h3>Wedding Cakes</h3>
-                            <p>Custom-designed wedding cakes for your special day</p>
+                    <!-- Swiper Carousel for Products -->
+                    <div class="swiper product-swiper">
+                        <div class="swiper-wrapper">
+                            <!-- Each .swiper-slide is a clickable product card -->
+                            <div class="swiper-slide product-card" data-product="Wedding Cakes">
+                                <img src="img/img1.png" alt="Wedding Cake">
+                                <div class="product-details">
+                                    <h3>Wedding Cakes</h3>
+                                    <p>Custom-designed wedding cakes for your special day</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide product-card" data-product="Cupcakes">
+                                <img src="img/img2.png" alt="Cupcakes">
+                                <div class="product-details">
+                                    <h3>Cupcakes</h3>
+                                    <p>Variety of flavors and decorative designs</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide product-card" data-product="Birthday Cakes">
+                                <img src="img/img3.png" alt="Birthday Cake">
+                                <div class="product-details">
+                                    <h3>Birthday Cakes</h3>
+                                    <p>Personalized cakes for all ages</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide product-card" data-product="Pastries">
+                                <img src="img/img4.png" alt="Pastries">
+                                <div class="product-details">
+                                    <h3>Pastries</h3>
+                                    <p>Fresh-baked daily pastries and treats</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide product-card" data-product="Cookies">
+                                <img src="img/img5.png" alt="Cookies">
+                                <div class="product-details">
+                                    <h3>Cookies</h3>
+                                    <p>Classic and custom-designed cookies</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide product-card" data-product="Special Occasions">
+                                <img src="img/img6.png" alt="Special Occasions">
+                                <div class="product-details">
+                                    <h3>Special Occasions</h3>
+                                    <p>Custom desserts for any celebration</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="product-card">
-                            <img src="img/img2.png" alt="Cupcakes">
-                            <h3>Cupcakes</h3>
-                            <p>Variety of flavors and decorative designs</p>
-                        </div>
-                        <div class="product-card">
-                            <img src="img/img3.png" alt="Birthday Cake">
-                            <h3>Birthday Cakes</h3>
-                            <p>Personalized cakes for all ages</p>
-                        </div>
-                        <div class="product-card">
-                            <img src="img/img4.png" alt="Pastries">
-                            <h3>Pastries</h3>
-                            <p>Fresh-baked daily pastries and treats</p>
-                        </div>
-                        <div class="product-card">
-                            <img src="img/img5.png" alt="Cookies">
-                            <h3>Cookies</h3>
-                            <p>Classic and custom-designed cookies</p>
-                        </div>
-                        <div class="product-card">
-                            <img src="img/img6.png" alt="Special Occasions">
-                            <h3>Special Occasions</h3>
-                            <p>Custom desserts for any celebration</p>
-                        </div>
+                        <div class="swiper-button swiper-button-prev"></div>
+                        <div class="swiper-button swiper-button-next"></div>
                     </div>
                 </div>
             </section>
 
-            <section id="contact" class="snap-section">
+            <section id="contact" class="snap-section" tabindex="0">
                 <div class="section-content animate-on-scroll">
                     <h2 class="section-title">Contact Us</h2>
                     <div class="contact-container">
