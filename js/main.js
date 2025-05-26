@@ -75,7 +75,7 @@ function typeWriter(element, text, speed = 50) {
     type();
 }
 
-// Product card hover effect
+// Product card hover effect (preserved for possible use elsewhere)
 function setupProductCards() {
     const cards = document.querySelectorAll('.product-card');
     cards.forEach(card => {
@@ -90,6 +90,40 @@ function setupProductCards() {
     });
 }
 
+// Swiper initialization for product carousel
+document.addEventListener("DOMContentLoaded", function() {
+    // Only init swiper if the element exists
+    if (document.querySelector(".swiper.product-swiper")) {
+        const swiper = new Swiper(".swiper.product-swiper", {
+            slidesPerView: 5,
+            spaceBetween: 0,
+            centeredSlides: true,
+            loop: true,
+            simulateTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                1200: { slidesPerView: 5 },
+                900:  { slidesPerView: 3 },
+                600:  { slidesPerView: 1 }
+            }
+        });
+
+        // Dynamically set slide heights to maintain aspect ratio
+        const calculateHeight = () => {
+            const swiperSlideElements = Array.from(document.querySelectorAll('.swiper.product-swiper .swiper-slide'))
+            if (!swiperSlideElements.length) return
+            const width = swiperSlideElements[0].getBoundingClientRect().width
+            // 3:4 aspect ratio
+            const height = Math.round(width / (3 / 4))
+            swiperSlideElements.map(element => element.style.height = `${height}px`)
+        };
+        calculateHeight();
+        window.addEventListener('resize', calculateHeight);
+    }
+});
 
 // Modal functionality for product images and in-depth product info
 function setupModal() {
@@ -97,7 +131,8 @@ function setupModal() {
     const modalImg = document.getElementById('modalImage');
     const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementsByClassName('close')[0];
-    const productCards = document.querySelectorAll('.product-card');
+    // Now select product cards inside swiper
+    const productCards = document.querySelectorAll('.swiper.product-swiper .product-card');
 
     // Product details map (updated images to match your imgX.png)
     const productDetails = {
@@ -148,15 +183,7 @@ function setupModal() {
     productCards.forEach(card => {
         card.onclick = function(e) {
             e.stopPropagation();
-            let productName = "";
-            const h3 = card.querySelector("h3");
-            if (h3) {
-                productName = h3.textContent.trim();
-            } else {
-                const img = card.querySelector("img");
-                productName = img ? img.alt.trim() : "";
-            }
-
+            let productName = card.getAttribute('data-product');
             const info = productDetails[productName];
             if (info) {
                 modalImg.src = info.img;
@@ -456,4 +483,71 @@ document.addEventListener('DOMContentLoaded', () => {
     if (firstSection) {
         firstSection.classList.add('visible');
     }
+});
+// Dot navigation logic for snap sections
+document.addEventListener("DOMContentLoaded", function () {
+    // Dot navigation
+    const dotBtns = document.querySelectorAll(".dot-nav-btn");
+    const snapSections = document.querySelectorAll(".snap-section");
+    const snapContainer = document.querySelector(".snap-container");
+
+    function setActiveDotByIndex(index) {
+        dotBtns.forEach((btn, i) => {
+            btn.classList.toggle("active", i === index);
+        });
+    }
+
+    // Scroll to section on dot click
+    dotBtns.forEach((btn, i) => {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetSelector = btn.getAttribute("data-target");
+            const targetSection = document.querySelector(targetSelector);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                setActiveDotByIndex(i);
+            }
+        });
+    });
+
+    // Track scroll position to update dot nav
+    function updateDotNavOnScroll() {
+        let found = false;
+        snapSections.forEach((section, i) => {
+            const rect = section.getBoundingClientRect();
+            // The section is considered "active" if its top is at or above 1/3 viewport and its bottom is at least 1/3 into viewport
+            if (!found && rect.top <= window.innerHeight / 3 && rect.bottom >= window.innerHeight / 3) {
+                setActiveDotByIndex(i);
+                found = true;
+            }
+        });
+    }
+
+    snapContainer.addEventListener("scroll", updateDotNavOnScroll);
+    window.addEventListener("resize", updateDotNavOnScroll);
+    updateDotNavOnScroll();
+
+    // Optionally, allow keyboard navigation with arrow keys
+    snapContainer.addEventListener("keydown", function (e) {
+        const activeIndex = Array.from(dotBtns).findIndex(btn => btn.classList.contains("active"));
+        if (e.key === "ArrowDown" || e.key === "PageDown") {
+            if (activeIndex < snapSections.length - 1) {
+                snapSections[activeIndex + 1].scrollIntoView({ behavior: "smooth", block: "start" });
+                dotBtns[activeIndex + 1].focus();
+            }
+            e.preventDefault();
+        }
+        if (e.key === "ArrowUp" || e.key === "PageUp") {
+            if (activeIndex > 0) {
+                snapSections[activeIndex - 1].scrollIntoView({ behavior: "smooth", block: "start" });
+                dotBtns[activeIndex - 1].focus();
+            }
+            e.preventDefault();
+        }
+    });
+
+    // Make snap sections focusable for accessibility
+    snapSections.forEach(section => {
+        section.setAttribute("tabindex", "0");
+    });
 });
