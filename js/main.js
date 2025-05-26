@@ -232,35 +232,30 @@ function validateInput(input) {
     return isValid;
 }
 
-// Enhanced smooth scrolling with snap effect
+// Enhanced smooth scrolling with snap effect and animated logo
 function setupScrolling() {
     const snapContainer = document.querySelector('.snap-container');
     const progressBar = document.createElement('div');
     progressBar.className = 'scroll-progress';
     document.body.appendChild(progressBar);
 
-    let isScrolling = false;
-    let lastScrollTime = 0;
-    const scrollCooldown = 1000; // ms between scroll actions
+    const header = document.querySelector('header');
+    const logo = document.querySelector('.logo');
+    let lastScrollTop = 0;
+    const scrollThreshold = 50; // Amount of scroll before animation triggers
 
     function smoothScrollTo(element) {
-        const now = Date.now();
-        if (now - lastScrollTime < scrollCooldown) return;
-        
-        lastScrollTime = now;
-        isScrolling = true;
-        
         element.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
-
-        setTimeout(() => {
-            isScrolling = false;
-        }, scrollCooldown);
     }
 
     // Wheel event handler
+    let isScrolling = false;
+    let lastScrollTime = 0;
+    const scrollCooldown = 1000;
+
     snapContainer.addEventListener('wheel', (e) => {
         if (isScrolling) {
             e.preventDefault();
@@ -280,7 +275,11 @@ function setupScrolling() {
             const targetIndex = currentIndex + direction;
 
             if (targetIndex >= 0 && targetIndex < sections.length) {
+                isScrolling = true;
                 smoothScrollTo(sections[targetIndex]);
+                setTimeout(() => {
+                    isScrolling = false;
+                }, scrollCooldown);
             }
         }
     }, { passive: false });
@@ -311,14 +310,30 @@ function setupScrolling() {
             const targetIndex = currentIndex + (diff > 0 ? 1 : -1);
 
             if (targetIndex >= 0 && targetIndex < sections.length) {
+                isScrolling = true;
                 smoothScrollTo(sections[targetIndex]);
+                setTimeout(() => {
+                    isScrolling = false;
+                }, scrollCooldown);
             }
             touchStartY = touchCurrentY;
         }
     }, { passive: false });
 
-    // Update scroll progress and handle animations
+    // Update scroll progress, logo, and header on scroll
     snapContainer.addEventListener('scroll', debounce(() => {
+        const scrollTop = snapContainer.scrollTop;
+
+        // Logo shrink/expand logic
+        if (scrollTop > scrollThreshold && !header.classList.contains('shrink')) {
+            header.classList.add('shrink');
+            logo.classList.add('shrink');
+        } else if (scrollTop <= scrollThreshold && header.classList.contains('shrink')) {
+            header.classList.remove('shrink');
+            logo.classList.remove('shrink');
+        }
+
+        // Update scroll progress
         const winScroll = snapContainer.scrollTop;
         const height = snapContainer.scrollHeight - snapContainer.clientHeight;
         const scrolled = (winScroll / height) * 100;
@@ -327,6 +342,8 @@ function setupScrolling() {
         handleParallax();
         handleSectionVisibility();
         updateActiveNavLink();
+        
+        lastScrollTop = scrollTop;
     }, 10));
 
     // Navigation click handling
