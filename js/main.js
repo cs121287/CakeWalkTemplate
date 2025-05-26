@@ -90,18 +90,89 @@ function setupProductCards() {
     });
 }
 
-// Modal functionality for product images
+
+// Modal functionality for product images and in-depth product info
 function setupModal() {
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
     const closeBtn = document.getElementsByClassName('close')[0];
-    const productCards = document.querySelectorAll('.product-card img');
+    const productCards = document.querySelectorAll('.product-card');
 
-    productCards.forEach(img => {
-        img.onclick = function(e) {
+    // Product details map (updated images to match your imgX.png)
+    const productDetails = {
+        "Wedding Cakes": {
+            img: "img/img1.png",
+            alt: "Wedding Cake",
+            title: "Wedding Cakes",
+            short: "Custom-designed wedding cakes for your special day",
+            long: "Our wedding cakes are crafted to be the centerpiece of your celebration. Choose from classic or modern designs, a wide variety of flavors, and elegant decorations such as sugar flowers and hand-piped details. Every cake is unique and tailored to your theme, size, and taste, ensuring your day is memorable and sweet."
+        },
+        "Cupcakes": {
+            img: "img/img2.png",
+            alt: "Cupcakes",
+            title: "Cupcakes",
+            short: "Variety of flavors and decorative designs",
+            long: "Our cupcakes are perfect for any gathering, available in a wide range of flavors like classic chocolate, vanilla, red velvet, lemon, and more. Each cupcake is topped with our signature buttercream or cream cheese frosting and can be decorated to match your event’s colors and theme."
+        },
+        "Birthday Cakes": {
+            img: "img/img3.png",
+            alt: "Birthday Cake",
+            title: "Birthday Cakes",
+            short: "Personalized cakes for all ages",
+            long: "Celebrate with a personalized birthday cake! We offer cakes for all ages, from playful designs for children to sophisticated cakes for adults. Select your favorite flavors, fillings, and decorations, and let us add a custom message and theme to make each birthday extra special."
+        },
+        "Pastries": {
+            img: "img/img4.png",
+            alt: "Pastries",
+            title: "Pastries",
+            short: "Fresh-baked daily pastries and treats",
+            long: "Enjoy our selection of fresh-baked pastries, including croissants, danishes, turnovers, and more. Made with the finest ingredients, our pastries are perfect for breakfast, brunch, or a delightful snack any time of day. Try our seasonal flavors and classic favorites!"
+        },
+        "Cookies": {
+            img: "img/img5.png",
+            alt: "Cookies",
+            title: "Cookies",
+            short: "Classic and custom-designed cookies",
+            long: "From classic chocolate chip to custom-designed iced sugar cookies, our cookies are baked fresh daily. We offer custom shapes, colors, and designs for holidays, parties, or corporate gifts. Each batch is made with care for great taste and perfect presentation."
+        },
+        "Special Occasions": {
+            img: "img/img6.png",
+            alt: "Special Occasions",
+            title: "Special Occasions",
+            short: "Custom desserts for any celebration",
+            long: "From baby showers and anniversaries to graduations and retirements, we create custom treats for every milestone. Choose from cakes, cupcakes, pastries, and cookies, all tailored to your occasion’s theme. Let us make your celebration even sweeter with our creative desserts."
+        }
+    };
+
+    productCards.forEach(card => {
+        card.onclick = function(e) {
             e.stopPropagation();
+            let productName = "";
+            const h3 = card.querySelector("h3");
+            if (h3) {
+                productName = h3.textContent.trim();
+            } else {
+                const img = card.querySelector("img");
+                productName = img ? img.alt.trim() : "";
+            }
+
+            const info = productDetails[productName];
+            if (info) {
+                modalImg.src = info.img;
+                modalImg.alt = info.alt;
+                modalCaption.innerHTML = `
+                    <h2 style="margin-bottom:0.5em">${info.title}</h2>
+                    <p style="font-style:italic;margin-bottom:0.8em">${info.short}</p>
+                    <div style="font-size:1rem;line-height:1.6;color:#222">${info.long}</div>
+                `;
+            } else {
+                const img = card.querySelector("img");
+                modalImg.src = img ? img.src : "";
+                modalImg.alt = img ? img.alt : "";
+                modalCaption.innerHTML = card.innerHTML;
+            }
             modal.style.display = "block";
-            modalImg.src = this.src;
             modal.classList.add('modal-open');
             document.body.style.overflow = 'hidden';
         }
