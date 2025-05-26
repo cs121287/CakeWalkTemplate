@@ -132,22 +132,84 @@ nav a:hover {
     padding-top: clamp(2.8rem, 7vw, 4.5rem);
     scrollbar-width: none;
     -ms-overflow-style: none;
+    position: relative;
 }
 
 .snap-container::-webkit-scrollbar {
     display: none;
 }
 
+/* Snap Section: Full viewport width, below header, only one visible at a time */
 .snap-section {
-    min-height: calc(100vh - clamp(2.8rem, 7vw, 4.5rem));
-    scroll-snap-align: start;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
     position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    min-height: calc(100dvh - clamp(2.8rem, 7vw, 4.5rem));
+    height: calc(100dvh - clamp(2.8rem, 7vw, 4.5rem));
+    max-height: calc(100dvh - clamp(2.8rem, 7vw, 4.5rem));
+    scroll-snap-align: start;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(0.8rem, 2vw, 1.5rem);
+    padding: clamp(0.8rem, 2vw, 1.5rem) 0;
     background: transparent;
     flex-wrap: wrap;
+    box-sizing: border-box;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Dot Navigation Styles */
+.dot-nav {
+    position: fixed;
+    top: 50%;
+    right: 2vw;
+    transform: translateY(-50%);
+    z-index: 104;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1em;
+    user-select: none;
+}
+
+.dot-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1em;
+}
+
+.dot-nav-btn {
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 0.08em 0.16em rgba(0,0,0,0.07);
+    transition: background 0.2s, box-shadow 0.2s, outline 0.2s;
+    cursor: pointer;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    position: relative;
+}
+
+.dot-nav-btn.active,
+.dot-nav-btn:focus-visible {
+    background: #ff6666;
+    outline: 2px solid #ff6666;
+    box-shadow: 0 0.22em 0.4em rgba(255, 102, 102, 0.18);
+}
+
+.dot-nav-btn:hover:not(.active) {
+    background: #ffeaea;
 }
 
 /* Section Content */
@@ -205,107 +267,134 @@ nav a:hover {
     object-fit: cover;
 }
 
-/* Products Gallery Styles */
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(0.6rem, 1.8vw, 1.3rem);
-    position: relative;
-    z-index: 2;
+/* Products Gallery Styles - Swiper integration */
+@import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+
+.swiper.product-swiper {
     width: 100%;
+    padding: 2.5em 0 3.5em 0;
+    max-width: 1100px;
+    margin: 0 auto;
     box-sizing: border-box;
-    justify-items: center;
-    align-items: start;
+    background: none;
 }
 
-/* Responsive grid for products */
-@media (max-width: 1200px) {
-    .products-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-@media (max-width: 1024px) {
-    .products-grid {
-        grid-template-columns: 1fr;
-    }
-}
-@media (max-width: 600px) {
-    .products-grid {
-        grid-template-columns: 1fr;
-        gap: 0.6rem;
-    }
+.swiper.product-swiper .swiper-wrapper {
+    display: flex;
+    align-items: center;
 }
 
-.product-card {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #222;
-    border-radius: 0.45rem;
-    box-shadow: 0 0.1em 0.2em rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+.swiper.product-swiper .swiper-slide {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0;
-    width: 12em;
-    aspect-ratio: 3 / 4;
-    min-width: 9em;
-    max-width: 15em;
-    padding: 0;
+    scale: 1.25;
+    transition: scale 250ms ease-in-out;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.swiper.product-swiper .swiper-slide.swiper-slide-active {
+    scale: 2;
+    z-index: 10;
+}
+
+.swiper.product-swiper .swiper-slide.swiper-slide-prev,
+.swiper.product-swiper .swiper-slide.swiper-slide-next {
+    scale: 1.7;
+    z-index: 5;
+    transition-duration: 150ms;
+}
+.swiper.product-swiper .swiper-slide.swiper-slide-next + .swiper-slide {
+    z-index: 2;
+}
+
+/* Product Card Styling in Swiper */
+.swiper.product-swiper .product-card {
+    background: #fff;
+    border: 1px solid #222;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.1em 0.2em rgba(0,0,0,0.08);
     overflow: hidden;
+    width: 180px;
+    aspect-ratio: 3/4;
+    min-width: 120px;
+    max-width: 220px;
+    height: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    transition: box-shadow 0.2s;
 }
 
-.product-card:hover {
-    transform: translateY(-0.19em);
-    box-shadow: 0 0.19em 0.6em rgba(0,0,0,0.16);
-}
-
-/* Product image with border and aspect ratio */
-.product-card img {
+.swiper.product-swiper .product-card img {
     width: 100%;
-    flex-shrink: 0;
-    aspect-ratio: 3 / 2.2;
+    height: 66%;
+    aspect-ratio: 3/2.2;
     object-fit: contain;
     background: #fafafa;
-    border-top-left-radius: 0.45rem;
-    border-top-right-radius: 0.45rem;
     border-bottom: 1px solid #222;
     display: block;
-    box-sizing: border-box;
-    max-height: 100%;
-    height: auto;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    user-select: none;
 }
 
-/* Product details with border and rounded corners */
-.product-card .product-details {
-    flex: 1 1 auto;
+.swiper.product-swiper .product-details {
+    flex: 1 1 30%;
+    padding: 0.7em 0.7em 0.8em 0.7em;
+    background: #fff;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.7em 0.7em 0.9em 0.7em;
-    border-bottom-left-radius: 0.45rem;
-    border-bottom-right-radius: 0.45rem;
-    border-top: none;
-    background: transparent;
-    box-sizing: border-box;
+    text-align: center;
 }
 
-.product-card h3 {
-    margin: 0.6em 0 0.4em 0;
+.swiper.product-swiper .product-card h3 {
+    margin: 0.6em 0 0.3em 0;
     color: #804040;
-    font-size: clamp(0.98rem, 1.1vw, 1.15rem);
-    text-align: center;
+    font-size: 1rem;
     font-weight: bold;
 }
 
-.product-card p {
+.swiper.product-swiper .product-card p {
     margin: 0;
-    font-size: clamp(0.89rem, 1vw, 1rem);
+    font-size: 0.96em;
     color: #444;
-    text-align: center;
     word-break: break-word;
+}
+
+/* Swiper navigation buttons */
+.swiper.product-swiper .swiper-button {
+    --position: 2.5%;
+    background-color: #F04E23;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+}
+.swiper.product-swiper .swiper-button-prev {
+    left: var(--position);
+}
+.swiper.product-swiper .swiper-button-next {
+    right: var(--position);
+}
+.swiper.product-swiper .swiper-button:hover {
+    background-color: #4A261F;
+}
+.swiper.product-swiper .swiper-button::after {
+    font-size: 1.3rem;
+    color: white;
 }
 
 /* Modal Styles */
@@ -515,6 +604,11 @@ footer .logo {
     .contact-container {
         grid-template-columns: 1fr;
     }
+    .snap-section {
+        min-height: calc(100dvh - clamp(3.3rem, 8vw, 5.2rem));
+        height: calc(100dvh - clamp(3.3rem, 8vw, 5.2rem));
+        max-height: calc(100dvh - clamp(3.3rem, 8vw, 5.2rem));
+    }
 }
 
 /* Small tablets and large phones */
@@ -549,12 +643,20 @@ footer .logo {
         flex-direction: column;
         gap: 0.7em;
     }
+    .snap-section {
+        min-height: calc(100dvh - clamp(3.7rem, 12vw, 6rem));
+        height: calc(100dvh - clamp(3.7rem, 12vw, 6rem));
+        max-height: calc(100dvh - clamp(3.7rem, 12vw, 6rem));
+    }
 }
 
 /* Phones */
 @media (max-width: 600px) {
     .snap-section {
         padding: 0.35em;
+        min-height: calc(100dvh - 3.5rem);
+        height: calc(100dvh - 3.5rem);
+        max-height: calc(100dvh - 3.5rem);
     }
     .services-container {
         flex-direction: column;
@@ -589,5 +691,10 @@ footer .logo {
     .modal-content {
         max-width: 99vw;
         max-height: 50vh;
+    }
+    .snap-section {
+        min-height: calc(100dvh - 2.5rem);
+        height: calc(100dvh - 2.5rem);
+        max-height: calc(100dvh - 2.5rem);
     }
 }
