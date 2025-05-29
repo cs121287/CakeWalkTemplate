@@ -1,8 +1,27 @@
+/* Animation Variables */
+:root {
+  --animation-duration-short: 0.3s;
+  --animation-duration-medium: 0.6s;
+  --animation-duration-long: 1s;
+  --animation-delay-short: 0.1s;
+  --animation-delay-medium: 0.2s;
+  
+  --easing-standard: ease;
+  --easing-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+  --easing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Colors from main theme */
+  --color-primary: #ff6666;
+  --color-error: #ff4444;
+  --color-success: #4CAF50;
+}
+
 /* Animation styles */
 .animate-on-scroll {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition: opacity var(--animation-duration-medium) ease-out, 
+                transform var(--animation-duration-medium) ease-out;
     will-change: opacity, transform;
 }
 
@@ -27,7 +46,7 @@
 
 /* Modal animations */
 .modal {
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity var(--animation-duration-short) ease-in-out;
     opacity: 0;
     will-change: opacity;
 }
@@ -40,22 +59,23 @@
 .product-card {
     position: relative;
     overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    transition: transform var(--animation-duration-short) var(--easing-bounce), 
+                box-shadow var(--animation-duration-short) var(--easing-standard);
     will-change: transform, box-shadow;
 }
 
 .product-card::after {
     content: '';
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: min(120px, 30vw); /* Responsive sizing */
+    height: min(120px, 30vw); /* Responsive sizing */
     background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
     top: var(--mouse-y, 0);
     left: var(--mouse-x, 0);
     transform: translate(-50%, -50%);
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.4s;
+    transition: opacity var(--animation-duration-short);
     will-change: opacity, transform;
     z-index: 1;
 }
@@ -85,7 +105,7 @@
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
-    transition: all 0.3s ease;
+    transition: all var(--animation-duration-short) var(--easing-standard);
     pointer-events: none;
     font-size: 1rem;
     color: #666;
@@ -98,16 +118,16 @@
     top: -0.75rem;
     left: 0.5rem;
     font-size: 0.8rem;
-    color: #ff6666;
+    color: var(--color-primary);
 }
 
 .error-message {
-    color: #ff4444;
+    color: var(--color-error);
     font-size: 0.8rem;
     margin-top: 0.25rem;
     opacity: 0;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: all var(--animation-duration-short) var(--easing-standard);
     will-change: opacity, transform;
 }
 
@@ -118,12 +138,12 @@
 
 /* Success message animation */
 .success-message {
-    background-color: #4CAF50;
+    background-color: var(--color-success);
     color: white;
     padding: 1rem;
     border-radius: 5px;
     margin-top: 1rem;
-    animation: slideIn 0.3s ease-out;
+    animation: slideIn var(--animation-duration-short) ease-out;
     will-change: transform, opacity;
 }
 
@@ -144,8 +164,8 @@ nav a::after {
     display: block;
     width: 0;
     height: 2px;
-    background: #ff6666;
-    transition: width 0.3s;
+    background: var(--color-primary);
+    transition: width var(--animation-duration-short);
     will-change: width;
 }
 
@@ -230,20 +250,6 @@ nav a:hover::after {
 .scroll-indicator {
     animation: bounce 2s infinite;
     will-change: transform;
-}
-
-/* Section snap animation */
-.snap-section {
-    /* REMOVE THIS LINE, not needed for snap */
-    /* transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); */
-    /* will-change: transform; */
-}
-
-/* Smooth section fade */
-.section-content {
-    /* REMOVE THIS LINE, not needed for snap */
-    /* transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); */
-    /* will-change: opacity, transform; */
 }
 
 /* New Product card animations */
