@@ -291,36 +291,6 @@ nav a:hover {
   user-select: none;
   border-bottom: none;
 }
-/* Only display the image inside product cards */
-.swiper.product-swiper .product-details,
-.swiper.product-swiper .product-card h3,
-.swiper.product-swiper .product-card p {
-  display: none !important;
-}
-
-.swiper.product-swiper .swiper-button {
-  --position: 2.5%;
-  background-color: #F04E23;
-  height: 2.5rem;
-  width: 2.5rem;
-  border-radius: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-}
-.swiper.product-swiper .swiper-button-prev {
-  left: var(--position);
-}
-.swiper.product-swiper .swiper-button-next {
-  right: var(--position);
-}
-.swiper.product-swiper .swiper-button:hover {
-  background-color: #4A261F;
-}
-.swiper.product-swiper .swiper-button::after {
-  font-size: 1.3rem;
-  color: white;
-}
 
 /* MODAL, CONTACT, FOOTER -- unchanged from your previous code */
 .modal {
@@ -370,6 +340,35 @@ nav a:hover {
   z-index: 1002;
 }
 .close:hover { color: #ff6666; }
+
+/* Modal title and description animations */
+.modal-title {
+  margin-bottom: 0.5em;
+  position: relative;
+}
+
+.modal-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 50px;
+  height: 2px;
+  background: #ff6666;
+  transition: width 0.3s ease;
+}
+
+.modal-title:hover::after {
+  width: 100%;
+}
+
+.modal-description {
+  font-style: italic;
+  margin-bottom: 0.8em;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #222;
+}
 
 .contact-container {
   display: grid;
