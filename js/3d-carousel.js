@@ -14,17 +14,64 @@ function initProductCarousel() {
     const carousel = document.getElementById('product-carousel');
     if (!carousel) return;
     
+    // Get computed carousel distance value
+    const computedStyle = getComputedStyle(document.documentElement);
+    const zDistance = computedStyle.getPropertyValue('--carousel-z-distance').trim() || '350px';
+    
     // Set initial rotation angle for each figure
     const figures = carousel.querySelectorAll('figure');
     const angleStep = 360 / figures.length;
     
     figures.forEach((figure, index) => {
+        // Calculate the angle for this figure
         const angle = angleStep * index;
-        figure.style.setProperty('--angle', angle);
+        
+        // Store angle as data attribute for reference
+        figure.dataset.angle = angle;
+        
+        // Apply the 3D transformation directly - this is critical for visibility
+        applyTransform(figure, angle, zDistance);
+        
+        // Set up hover effect - store the original transform
+        figure.dataset.originalTransform = figure.style.transform;
+        
+        // Add hover event listeners
+        figure.addEventListener('mouseenter', function() {
+            this.style.transform = `${this.dataset.originalTransform} scale(1.05)`;
+            this.style.zIndex = '100';
+            this.style.boxShadow = '0 10px 30px rgba(255, 102, 102, 0.5)';
+        });
+        
+        figure.addEventListener('mouseleave', function() {
+            this.style.transform = this.dataset.originalTransform;
+            this.style.zIndex = '';
+            this.style.boxShadow = '';
+        });
     });
+    
+    // Function to apply transform
+    function applyTransform(element, angle, distance) {
+        // Remove 'px' if present
+        distance = distance.replace('px', '');
+        element.style.transform = `rotateY(${angle}deg) translateZ(${distance}px)`;
+    }
     
     // Setup product card click events for modal
     setupProductCardClicks(figures);
+    
+    // Update transforms when window resizes
+    window.addEventListener('resize', function() {
+        // Get potentially updated value after resize/media query change
+        const updatedZDistance = getComputedStyle(document.documentElement)
+            .getPropertyValue('--carousel-z-distance').trim() || '350px';
+            
+        figures.forEach(figure => {
+            const angle = parseFloat(figure.dataset.angle);
+            applyTransform(figure, angle, updatedZDistance);
+            // Update original transform for hover effects
+            figure.dataset.originalTransform = figure.style.transform;
+        });
+    });
 }
 
 /**
@@ -97,6 +144,19 @@ function setupIntersectionObserver() {
                 const title = productsSection.querySelector('.section-title');
                 if (title) {
                     title.classList.add('animated-title');
+                }
+                
+                // Force refresh the carousel positions when visible
+                const carousel = document.getElementById('product-carousel');
+                if (carousel) {
+                    const computedStyle = getComputedStyle(document.documentElement);
+                    const zDistance = computedStyle.getPropertyValue('--carousel-z-distance').trim() || '350px';
+                    const figures = carousel.querySelectorAll('figure');
+                    
+                    figures.forEach(figure => {
+                        const angle = parseFloat(figure.dataset.angle || 0);
+                        figure.style.transform = `rotateY(${angle}deg) translateZ(${zDistance.replace('px', '')}px)`;
+                    });
                 }
                 
                 observer.unobserve(entry.target);
