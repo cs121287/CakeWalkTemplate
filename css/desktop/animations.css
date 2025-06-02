@@ -1,0 +1,230 @@
+/* Desktop Animations */
+:root {
+  /* Animation timing */
+  --animation-duration-short: 0.3s;
+  --animation-duration-medium: 0.6s;
+  --animation-duration-long: 1s;
+  --animation-delay-short: 0.1s;
+  --animation-delay-medium: 0.2s;
+  
+  /* Animation easing */
+  --easing-standard: ease;
+  --easing-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+  --easing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Animation distances - desktop sizes */
+  --animation-distance-sm: 10px;
+  --animation-distance-md: 20px;
+  --animation-distance-lg: 30px;
+  
+  /* Light effect sizes */
+  --light-effect-size: 120px;
+}
+
+/* Animation styles optimized for desktop */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(var(--animation-distance-lg));
+    transition: opacity var(--animation-duration-medium) ease-out, 
+                transform var(--animation-duration-medium) ease-out;
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modal animations */
+.modal {
+    transition: opacity var(--animation-duration-short) ease-in-out;
+    opacity: 0;
+    will-change: opacity;
+}
+
+.modal.modal-open {
+    opacity: 1;
+}
+
+/* Product card hover effect - Enhanced for desktop */
+.product-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--animation-duration-short) var(--easing-bounce), 
+                box-shadow var(--animation-duration-short) var(--easing-standard);
+    will-change: transform, box-shadow;
+}
+
+.product-card::after {
+    content: '';
+    position: absolute;
+    width: var(--light-effect-size);
+    height: var(--light-effect-size);
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    top: var(--mouse-y, 0);
+    left: var(--mouse-x, 0);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--animation-duration-short);
+    will-change: opacity, transform;
+    z-index: 1;
+}
+
+.product-card:hover::after {
+    opacity: 1;
+    animation: moveLightEffect 1.5s infinite alternate;
+}
+
+@keyframes moveLightEffect {
+    0% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Form animations */
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    transition: all var(--animation-duration-short) var(--easing-standard);
+    pointer-events: none;
+    font-size: 1rem;
+    color: #666;
+    background: white;
+    padding: 0 0.5rem;
+    will-change: transform, font-size, color;
+}
+
+.form-group.focused label {
+    top: -0.75rem;
+    left: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-primary);
+}
+
+.error-message {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all var(--animation-duration-short) var(--easing-standard);
+    will-change: opacity, transform;
+}
+
+.form-group.invalid .error-message {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Success message animation */
+.success-message {
+    background-color: var(--color-success);
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    animation: slideIn var(--animation-duration-short) ease-out;
+    will-change: transform, opacity;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Navigation highlight effect */
+nav a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--animation-duration-short);
+    will-change: width;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Active section indicator */
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Typing cursor animation */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.typing::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+}
+
+/* Desktop-specific scroll indicator animation */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.scroll-indicator {
+    animation: bounce 2s infinite;
+    will-change: transform;
+}
+
+/* Float animation for active slide */
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.swiper.product-swiper .swiper-slide-active {
+    animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* Desktop animation enhancements */
+@media (min-width: 1200px) {
+  :root {
+    --animation-duration-medium: 0.7s;
+    --light-effect-size: 140px;
+  }
+}
