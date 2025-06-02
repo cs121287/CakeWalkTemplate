@@ -5,7 +5,8 @@
  */
 (function() {
     // Configuration
-    const cssFiles = ['style.css', 'animations.css', '3d-carousel.css'];
+    const mobileCssFiles = ['style.css', 'animations.css', '3d-carousel.css', 'modal.css'];
+    const desktopCssFiles = ['style.css', 'animations.css', '3d-carousel.css', 'modal.css', 'accordion-nav.css'];
     const breakpoint = 768; // Width threshold between mobile and desktop
     const storageKey = 'cakeWalkDeviceType';
     const cacheDuration = 1000 * 60 * 60; // 1 hour cache for device type
@@ -82,9 +83,10 @@
     /**
      * Preload stylesheets to prevent flicker
      * @param {string} deviceType - 'mobile' or 'desktop'
+     * @param {Array} cssFiles - Array of CSS files to preload
      * @returns {Promise<void>} - Resolves when all stylesheets are loaded
      */
-    function preloadStylesheets(deviceType) {
+    function preloadStylesheets(deviceType, cssFiles) {
         return Promise.all(cssFiles.map(file => {
             return new Promise((resolve) => {
                 const link = document.createElement('link');
@@ -102,6 +104,7 @@
      */
     async function loadStylesheets() {
         const deviceType = isMobile() ? 'mobile' : 'desktop';
+        const cssFiles = deviceType === 'mobile' ? mobileCssFiles : desktopCssFiles;
         console.log(`Loading ${deviceType} stylesheets`);
         
         // First load common styles
@@ -111,7 +114,7 @@
         document.head.appendChild(commonLink);
         
         // Preload device-specific styles to prevent flicker
-        await preloadStylesheets(deviceType);
+        await preloadStylesheets(deviceType, cssFiles);
         
         // Now apply them
         cssFiles.forEach(file => {
@@ -151,6 +154,7 @@
             document.documentElement.setAttribute('data-device', newDeviceType);
             
             // Load new stylesheets
+            const cssFiles = newDeviceType === 'mobile' ? mobileCssFiles : desktopCssFiles;
             cssFiles.forEach(file => {
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
