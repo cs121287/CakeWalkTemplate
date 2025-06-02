@@ -26,7 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add zoom controls
     addZoomControls();
+    
+    // Add 3D carousel modal CSS
+    addCarouselModalCSS();
 });
+
+/**
+ * Add the 3D carousel modal CSS to the document
+ */
+function addCarouselModalCSS() {
+    if (!document.querySelector('link[href="css/desktop/3d-carousel-modal.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'css/desktop/3d-carousel-modal.css';
+        document.head.appendChild(link);
+    }
+}
 
 /**
  * Create the content panel structure in the DOM
@@ -304,26 +319,59 @@ function initializeClonedContent(contentElement, sectionName, menuItem) {
 }
 
 /**
- * Initialize the product carousel in the panel
+ * Initialize the product carousel in the panel - UPDATED FUNCTION
  */
 function initPanelProductCarousel() {
     const carousel = document.getElementById('panel-product-carousel');
-    if (!carousel) return;
+    if (!carousel) {
+        console.error('Panel carousel not found');
+        return;
+    }
+    
+    // Ensure proper positioning and styling
+    carousel.style.position = 'relative';
+    carousel.style.height = '400px';
+    carousel.style.transform = 'translateZ(-400px)';
+    carousel.style.transformStyle = 'preserve-3d';
     
     // Get carousel figures
     const figures = carousel.querySelectorAll('figure');
+    if (!figures || figures.length === 0) {
+        console.error('No figures found in panel carousel');
+        return;
+    }
+    
     const angleStep = 360 / figures.length;
+    console.log(`Positioning ${figures.length} figures with angle step ${angleStep}`);
     
     // Setup initial positioning
     figures.forEach((figure, index) => {
         const angle = angleStep * index;
         figure.style.transform = `rotateY(${angle}deg) translateZ(250px)`;
+        figure.style.position = 'absolute';
+        figure.style.width = '200px';
+        figure.style.height = '200px';
+        figure.style.left = '50%';
+        figure.style.top = '50%';
+        figure.style.marginLeft = '-100px';
+        figure.style.marginTop = '-100px';
+        figure.style.transformOrigin = 'center center';
         
+        // Make product details visible
+        const details = figure.querySelector('.product-details');
+        if (details) {
+            details.style.display = 'block';
+        }
+        
+        // Set up click event
         figure.addEventListener('click', function() {
             // Toggle active state
             const isActive = this.classList.contains('active');
+            
+            // Remove active class from all figures
             figures.forEach(fig => fig.classList.remove('active'));
             
+            // Toggle carousel animation
             if (!isActive) {
                 this.classList.add('active');
                 carousel.classList.add('paused');
@@ -333,8 +381,46 @@ function initPanelProductCarousel() {
         });
     });
     
-    // Start rotation animation
-    carousel.style.animation = 'rotation 30s infinite linear';
+    // Add rotation animation
+    carousel.style.animation = 'modalRotation 30s infinite linear';
+    
+    // Add controls for the carousel
+    addCarouselControls(carousel);
+}
+
+/**
+ * Add controls for the carousel
+ */
+function addCarouselControls(carousel) {
+    const parentContainer = carousel.closest('.carousel-container');
+    if (!parentContainer) return;
+    
+    // Create controls container
+    const controlsContainer = document.createElement('div');
+    controlsContainer.className = 'carousel-controls';
+    
+    // Add rotate button
+    const rotateBtn = document.createElement('button');
+    rotateBtn.className = 'carousel-btn rotate-btn';
+    rotateBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    rotateBtn.title = 'Pause rotation';
+    rotateBtn.addEventListener('click', function() {
+        if (carousel.classList.contains('paused')) {
+            carousel.classList.remove('paused');
+            this.innerHTML = '<i class="fas fa-pause"></i>';
+            this.title = 'Pause rotation';
+        } else {
+            carousel.classList.add('paused');
+            this.innerHTML = '<i class="fas fa-play"></i>';
+            this.title = 'Start rotation';
+        }
+    });
+    
+    // Add buttons to the container
+    controlsContainer.appendChild(rotateBtn);
+    
+    // Add the container after the carousel
+    parentContainer.parentNode.insertBefore(controlsContainer, parentContainer.nextSibling);
 }
 
 /**
@@ -540,16 +626,103 @@ function createServicesMissionContent() {
 
 // Our Products - Gallery
 function createProductsGalleryContent() {
-    // For the gallery, we'll use the existing 3D carousel
+    // Create custom gallery content with the 3D carousel
     const container = document.createElement('div');
     container.className = 'custom-content gallery-content';
     
-    // Clone the existing carousel content
-    const originalContent = document.querySelector('#products .section-content');
-    if (originalContent) {
-        const clonedContent = originalContent.cloneNode(true);
-        container.appendChild(clonedContent);
-    }
+    container.innerHTML = `
+        <h2 class="section-title">Product Gallery</h2>
+        <h3>Click on a product for more details</h3>
+        
+        <div class="carousel-container">
+            <div id="panel-product-carousel">
+                <figure data-product="Wedding Cakes" data-category="cakes">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img1.png" alt="Wedding Cake">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Wedding Cakes</h3>
+                            <p>Custom-designed wedding cakes for your special day</p>
+                        </div>
+                    </div>
+                </figure>
+                <figure data-product="Cupcakes" data-category="cupcakes">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img2.png" alt="Cupcakes">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Cupcakes</h3>
+                            <p>Variety of flavors and decorative designs</p>
+                        </div>
+                    </div>
+                </figure>
+                <figure data-product="Birthday Cakes" data-category="cakes">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img3.png" alt="Birthday Cake">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Birthday Cakes</h3>
+                            <p>Personalized cakes for all ages</p>
+                        </div>
+                    </div>
+                </figure>
+                <figure data-product="Pastries" data-category="pastries">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img4.png" alt="Pastries">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Pastries</h3>
+                            <p>Fresh-baked daily pastries and treats</p>
+                        </div>
+                    </div>
+                </figure>
+                <figure data-product="Cookies" data-category="pastries">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img5.png" alt="Cookies">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Cookies</h3>
+                            <p>Classic and custom-designed cookies</p>
+                        </div>
+                    </div>
+                </figure>
+                <figure data-product="Pies" data-category="pies">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <img src="img/img6.png" alt="Pies">
+                            <div class="product-overlay">
+                                <span class="view-details">View Details</span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Pies</h3>
+                            <p>Delicious homemade pies for any occasion</p>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    `;
     
     return container;
 }
@@ -1045,7 +1218,7 @@ function createContactFormContent() {
         </div>
     `;
     
-    // Add event listener for form submission
+    // Add form submission handler
     const form = container.querySelector('#desktopContactForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1284,4 +1457,15 @@ function createAboutPoliciesContent() {
     `;
     
     return container;
+}
+/**
+ * Add the 3D carousel modal CSS to the document
+ */
+function addCarouselModalCSS() {
+    if (!document.querySelector('link[href="css/desktop/3d-carousel-modal.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'css/desktop/3d-carousel-modal.css';
+        document.head.appendChild(link);
+    }
 }
