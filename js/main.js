@@ -54,7 +54,12 @@ function updateActiveNavLink() {
         const rect = section.getBoundingClientRect();
         if (rect.top <= 150 && rect.bottom >= 150) {
             navLinks.forEach(link => link.classList.remove('active'));
-            navLinks[index].classList.add('active');
+            // Find the link that matches this section's ID
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === '#' + section.id) {
+                    link.classList.add('active');
+                }
+            });
         }
     });
 }
@@ -127,6 +132,8 @@ function setupModal() {
 // Form validation and enhancement
 function setupContactForm() {
     const form = document.getElementById('contactForm');
+    if (!form) return;
+    
     const inputs = form.querySelectorAll('input, textarea');
 
     inputs.forEach(input => {
@@ -226,6 +233,8 @@ function validateInput(input) {
 // Enhanced smooth scrolling with snap effect and animated logo
 function setupScrolling() {
     const snapContainer = document.querySelector('.snap-container');
+    if (!snapContainer) return;
+    
     const progressBar = document.createElement('div');
     progressBar.className = 'scroll-progress';
     document.body.appendChild(progressBar);
@@ -318,10 +327,10 @@ function setupScrolling() {
         // Logo shrink/expand logic
         if (scrollTop > scrollThreshold && !header.classList.contains('shrink')) {
             header.classList.add('shrink');
-            logo.classList.add('shrink');
+            if (logo) logo.classList.add('shrink');
         } else if (scrollTop <= scrollThreshold && header.classList.contains('shrink')) {
             header.classList.remove('shrink');
-            logo.classList.remove('shrink');
+            if (logo) logo.classList.remove('shrink');
         }
 
         // Update scroll progress
@@ -340,16 +349,38 @@ function setupScrolling() {
     // Navigation click handling
     document.querySelectorAll('.nav-link').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                smoothScrollTo(targetSection);
-                history.pushState(null, null, targetId);
+            if (this.hasAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    smoothScrollTo(targetSection);
+                    history.pushState(null, null, targetId);
+                }
             }
         });
     });
+    
+    // Setup back to top button functionality
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', function() {
+            snapContainer.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Show/hide button based on scroll position
+        snapContainer.addEventListener('scroll', debounce(() => {
+            if (snapContainer.scrollTop > window.innerHeight / 2) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }, 150));
+    }
 }
 
 // Initialize all features
@@ -377,12 +408,15 @@ document.addEventListener('DOMContentLoaded', () => {
         firstSection.classList.add('visible');
     }
 });
+
 // Dot navigation logic for snap sections
 document.addEventListener("DOMContentLoaded", function () {
     // Dot navigation
     const dotBtns = document.querySelectorAll(".dot-nav-btn");
     const snapSections = document.querySelectorAll(".snap-section");
     const snapContainer = document.querySelector(".snap-container");
+    
+    if (!dotBtns.length || !snapContainer) return;
 
     function setActiveDotByIndex(index) {
         dotBtns.forEach((btn, i) => {
