@@ -8,25 +8,22 @@
     <!-- Common CSS -->
     <link rel="stylesheet" href="css/common.css">
     
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/3d-carousel.css">
-    <link rel="stylesheet" href="css/mobile/modal.css">
+    <!-- Device specific CSS will be loaded by the device detector -->
     
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <!-- Scripts -->
     <script src="js/device-detector.js"></script>
     <script src="js/main.js" defer></script>
     <script src="js/3d-carousel.js" defer></script>
     <script src="js/mobile-menu.js" defer></script>
+	<script src="js/desktop-nav.js" defer></script>
 </head>
 <body>
     <div class="parallax-bg"></div>
 
-    <!-- Mobile-optimized Header -->
+    <!-- Mobile Header (will only display on mobile) -->
     <header class="mobile-header">
         <div class="header-container">
             <div class="menu-icon" id="menuToggle" aria-label="Open menu">
@@ -41,8 +38,74 @@
         </div>
     </header>
     
-    <!-- Mobile Side Navigation -->
+    <!-- NEW DESKTOP ACCORDION SIDEBAR (will only display on desktop) -->
+    <div class="left-menu desktop-only">
+        <div class="logo">
+            <img src="img/logo.png" alt="Cake Walk Baking Co. Logo">
+            <div>Cake Walk Bakery</div>
+        </div>
+        <div class="accordion">
+            <div class="section">
+                <input type="radio" name="accordion-1" id="section-1" checked="checked"/>
+                <label for="section-1"><span><i class="fas fa-concierge-bell"></i> Our Services</span></label>
+                <div class="content">
+                    <ul>
+                        <li data-target="#services"><i class="fas fa-birthday-cake"></i><span>Custom Cakes</span></li>
+                        <li data-target="#services"><i class="fas fa-glass-cheers"></i><span>Events & Catering</span></li>
+                        <li data-target="#services"><i class="fas fa-cookie"></i><span>Specialty Items</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="section">
+                <input type="radio" name="accordion-1" id="section-2"/>
+                <label for="section-2"><span><i class="fas fa-shopping-basket"></i> Our Products</span></label>
+                <div class="content">
+                    <ul>
+                        <li data-target="#products"><i class="fas fa-birthday-cake"></i><span>Cakes</span></li>
+                        <li data-target="#products"><i class="fas fa-cookie"></i><span>Cookies</span></li>
+                        <li data-target="#products"><i class="fas fa-bread-slice"></i><span>Pastries</span></li>
+                        <li data-target="#products"><i class="fas fa-cheese"></i><span>Pies</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="section">
+                <input type="radio" name="accordion-1" id="section-3"/>
+                <label for="section-3"><span><i class="fas fa-envelope"></i> Contact Us</span></label>
+                <div class="content">
+                    <ul>
+                        <li data-target="#contact"><i class="fas fa-map-marker-alt"></i><span>Location</span></li>
+                        <li data-target="#contact"><i class="fas fa-phone"></i><span>Phone</span></li>
+                        <li data-target="#contact"><i class="fas fa-envelope"></i><span>Email Form</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="section">
+                <input type="radio" name="accordion-1" id="section-4"/>
+                <label for="section-4"><span><i class="fas fa-info-circle"></i> About Us</span></label>
+                <div class="content">
+                    <ul>
+                        <li data-target="#footer"><i class="fas fa-history"></i><span>Our Story</span></li>
+                        <li data-target="#footer"><i class="fas fa-users"></i><span>Our Team</span></li>
+                        <li data-target="#footer"><i class="fas fa-file-alt"></i><span>Policies</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Desktop Footer Content (inside sidebar) -->
+        <div class="sidebar-footer">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+            <p>&copy; 2025 Cake Walk Baking Co.</p>
+        </div>
+    </div>
+    
+    <!-- Mobile Side Navigation (will only display on mobile) -->
     <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <!-- Mobile nav content remains unchanged -->
         <div class="nav-header">
             <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="nav-logo">
             <div class="close-menu" id="closeMenu" aria-label="Close menu">
@@ -65,7 +128,9 @@
     <!-- Overlay for when menu is open -->
     <div class="nav-overlay" id="navOverlay"></div>
 
-    <main class="snap-container">
+    <!-- Main content with sidebar margin adjustment -->
+    <main class="snap-container desktop-main">
+        <!-- The rest of your sections remain unchanged -->
         <section id="services" class="snap-section" tabindex="0">
             <div class="section-content animate-on-scroll">
                 <h2 class="section-title">Our Services</h2>
@@ -230,8 +295,24 @@
             </div>
         </section>
 
-        <!-- Mobile-optimized footer -->
         <section id="footer" class="snap-section" tabindex="0">
+            <!-- Desktop footer moved to sidebar, this section is kept for content -->
+            <div class="section-content animate-on-scroll">
+                <h2 class="section-title">About Us</h2>
+                <div class="about-container">
+                    <div class="about-text">
+                        <h3>Our Story</h3>
+                        <p>Cake Walk Baking Co. was founded in 2015 with the simple goal of bringing joy through delicious baked goods. What started as a small passion project has grown into a beloved local bakery.</p>
+                        <p>Our team of talented bakers combines traditional techniques with innovative flavors to create memorable treats for all occasions. From weddings to birthdays, our custom creations have been part of countless special moments.</p>
+                    </div>
+                    <div class="team-section">
+                        <h3>Our Team</h3>
+                        <p>Led by our head pastry chef Elizabeth Chen, our team brings decades of combined experience to every creation. We're passionate about quality ingredients, exceptional taste, and beautiful presentation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile-optimized footer (will only display on mobile) -->
             <footer class="mobile-footer">
                 <div class="footer-content">
                     <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
@@ -261,7 +342,7 @@
         <div id="modalCaption" class="modal-caption"></div>
     </div>
     
-    <!-- Back to top button for mobile -->
+    <!-- Back to top button -->
     <button id="backToTop" class="back-to-top" aria-label="Back to top">
         <i class="fas fa-chevron-up"></i>
     </button>
