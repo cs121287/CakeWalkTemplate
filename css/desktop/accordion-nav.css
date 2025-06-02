@@ -36,6 +36,7 @@
   font-size: 18px;
   font-weight: var(--font-weight-bold);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 0 0 auto; /* Don't grow or shrink */
 }
 
 .left-menu .logo img {
@@ -43,12 +44,14 @@
   margin-bottom: 10px;
 }
 
-/* Accordion menu */
+/* Accordion menu - modified for no scrollbars */
 .accordion {
   color: var(--color-text);
   width: 100%;
-  flex-grow: 1;
-  overflow-y: auto;
+  flex: 1 1 auto; /* Grow to fill available space */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Remove scrollbars */
 }
 
 .accordion .section {
@@ -72,10 +75,10 @@
 }
 
 .accordion .section input[type='radio']:checked ~ .content {
-  max-height: 300px;
+  max-height: calc((100vh - 350px) / 4); /* Dynamic height based on viewport */
   opacity: 1;
   z-index: 10;
-  overflow-y: auto;
+  overflow: hidden; /* Remove scrollbars */
 }
 
 .accordion .section label {
@@ -125,7 +128,7 @@
   transition: all 0.4s;
   opacity: 0;
   position: relative;
-  overflow-y: hidden;
+  overflow: hidden; /* Remove scrollbars */
   background: rgba(255, 255, 255, 0.7);
 }
 
@@ -135,7 +138,7 @@
 }
 
 .accordion .section input[type='radio']:checked ~ .content {
-  padding: 10px 0;
+  padding: 0; /* No padding to maximize space */
 }
 
 .accordion ul {
@@ -143,12 +146,19 @@
   padding: 0;
   margin: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
 .accordion ul li {
   padding: 10px 15px 10px 40px;
   cursor: pointer;
   transition: background 0.2s;
+  flex: 0 0 auto; /* Don't grow or shrink */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .accordion ul li:hover {
@@ -183,6 +193,7 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   font-size: 0.8rem;
   color: var(--color-text-light);
+  flex: 0 0 auto; /* Don't grow or shrink */
 }
 
 .sidebar-footer .social-icons {
@@ -207,6 +218,16 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   .left-menu {
     width: 220px;
+  }
+  
+  .accordion ul li {
+    padding: 8px 10px 8px 35px;
+    font-size: 0.9rem;
+  }
+  
+  .accordion .section label {
+    padding: 10px 15px;
+    font-size: 0.95rem;
   }
 }
 
@@ -239,4 +260,32 @@
 
 .accordion ul li:hover::after {
   left: 100%;
+}
+
+/* Smaller screens adjustments */
+@media (max-height: 700px) {
+  .left-menu .logo {
+    padding: 15px 10px;
+  }
+  
+  .left-menu .logo img {
+    max-width: 60px;
+    margin-bottom: 5px;
+  }
+  
+  .accordion .section label {
+    padding: 8px 15px;
+  }
+  
+  .accordion ul li {
+    padding: 6px 15px 6px 35px;
+  }
+  
+  .accordion .section input[type='radio']:checked ~ .content {
+    max-height: calc((100vh - 300px) / 4);
+  }
+  
+  .sidebar-footer {
+    padding: 10px;
+  }
 }

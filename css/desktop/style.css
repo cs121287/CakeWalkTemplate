@@ -54,7 +54,7 @@ body {
   background: var(--color-background-light);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
-  overflow: auto;
+  overflow: hidden; /* Remove scrollbars */
   backdrop-filter: blur(10px);
   transition: transform 0.5s var(--easing-smooth), opacity 0.5s var(--easing-smooth);
   opacity: 0;
@@ -66,21 +66,22 @@ body {
 .content-panel.active {
   opacity: 1;
   transform: translateY(0);
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Panel header */
 .panel-header {
-  position: sticky;
-  top: 0;
+  position: relative; /* Changed from sticky to relative */
   background: rgba(255, 230, 230, 0.95);
-  padding: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
   backdrop-filter: blur(5px);
   z-index: 2;
+  flex: 0 0 auto; /* Don't grow or shrink */
 }
 
 .panel-title {
@@ -109,11 +110,34 @@ body {
   color: var(--color-primary);
 }
 
-/* Panel content */
+/* Panel content - modified for no scrollbars */
 .panel-content {
   padding: var(--spacing-md);
-  overflow: auto;
-  height: calc(100% - 70px); /* Height minus header */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+/* Auto-scaling container for panel content */
+.auto-scale-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scale content to fit viewport */
+.scale-content {
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center center;
 }
 
 /* SECTION CONTENT */
@@ -122,6 +146,7 @@ body {
   margin: 0 auto;
   padding: var(--spacing-md);
   box-sizing: border-box;
+  max-height: 100%;
 }
 
 /* Services section */
@@ -245,6 +270,17 @@ body {
   margin-bottom: var(--spacing-md);
 }
 
+/* 3D Carousel adjustments for no scrollbars */
+.carousel-container {
+  height: auto;
+  position: relative;
+  perspective: 800px;
+  max-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Responsive adjustments for various desktop sizes */
 /* Medium desktops */
 @media (min-width: 1024px) and (max-width: 1440px) {
@@ -294,4 +330,66 @@ textarea:focus-visible,
 .panel-close:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Custom style for map container to ensure no overflow */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.map-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Adaptive font sizing for smaller screens */
+@media (max-height: 800px) {
+  :root {
+    --font-size-lg: 1.6rem;
+    --font-size-md: 1.1rem;
+    --font-size-base: 0.95rem;
+    --font-size-sm: 0.9rem;
+  }
+  
+  .panel-content {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Zoom controls to scale content */
+.zoom-controls {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.zoom-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.zoom-btn:hover {
+  background: var(--color-primary-light);
 }

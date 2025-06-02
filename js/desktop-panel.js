@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show default content panel (first section)
     showDefaultContent();
+    
+    // Add resize observer to auto-scale content
+    addResizeObserver();
+    
+    // Add zoom controls
+    addZoomControls();
 });
 
 /**
@@ -49,11 +55,33 @@ function createContentPanel() {
     panelContent.className = 'panel-content';
     panelContent.id = 'panelContent';
     
+    // Create auto-scaling container
+    const autoScaleContainer = document.createElement('div');
+    autoScaleContainer.className = 'auto-scale-container';
+    autoScaleContainer.id = 'autoScaleContainer';
+    
+    // Create scale content container
+    const scaleContent = document.createElement('div');
+    scaleContent.className = 'scale-content';
+    scaleContent.id = 'scaleContent';
+    
+    // Add zoom controls container
+    const zoomControls = document.createElement('div');
+    zoomControls.className = 'zoom-controls';
+    zoomControls.innerHTML = `
+        <button class="zoom-btn zoom-in" aria-label="Zoom in">+</button>
+        <button class="zoom-btn zoom-out" aria-label="Zoom out">-</button>
+        <button class="zoom-btn zoom-reset" aria-label="Reset zoom">↺</button>
+    `;
+    
     // Assemble the panel
     panelHeader.appendChild(panelTitle);
     panelHeader.appendChild(closeButton);
+    autoScaleContainer.appendChild(scaleContent);
+    panelContent.appendChild(autoScaleContainer);
     contentPanel.appendChild(panelHeader);
     contentPanel.appendChild(panelContent);
+    contentPanel.appendChild(zoomControls);
     
     // Add to the document
     document.body.appendChild(contentPanel);
@@ -113,7 +141,7 @@ function extractSectionContents() {
 function setupMenuClicks() {
     const menuItems = document.querySelectorAll('.accordion ul li');
     const contentPanel = document.getElementById('contentPanel');
-    const panelContent = document.getElementById('panelContent');
+    const scaleContent = document.getElementById('scaleContent');
     const panelTitle = document.getElementById('panelTitle');
     
     menuItems.forEach(item => {
@@ -150,15 +178,21 @@ function setupMenuClicks() {
             panelTitle.textContent = title;
             
             // Clear current content
-            panelContent.innerHTML = '';
+            scaleContent.innerHTML = '';
+            
+            // Reset zoom level
+            scaleContent.style.transform = 'scale(1)';
             
             // Insert the correct section content
             if (window.sectionContents[sectionName]) {
                 const contentClone = window.sectionContents[sectionName].cloneNode(true);
-                panelContent.appendChild(contentClone);
+                scaleContent.appendChild(contentClone);
                 
                 // Initialize any interactive elements in the cloned content
                 initializeClonedContent(contentClone, sectionName);
+                
+                // Auto-fit content if needed
+                autoFitContent();
             }
             
             // Show the panel
@@ -197,7 +231,7 @@ function setupMenuClicks() {
  */
 function initializeClonedContent(contentElement, sectionName) {
     // Handle 3D carousel in products section
-    if (sectionName === 'products' && typeof initMobileProductCarousel === 'function') {
+    if (sectionName === 'products') {
         // Fix IDs to avoid duplicate IDs in the document
         const carousel = contentElement.querySelector('#product-carousel');
         if (carousel) {
@@ -294,5 +328,110 @@ window.addEventListener('resize', function() {
         if (contentPanel) {
             contentPanel.classList.remove('active');
         }
+    } else {
+        // Auto-fit content when resizing
+        autoFitContent();
     }
 });
+
+/**
+ * Add ResizeObserver to dynamically adjust content scale
+ */
+function addResizeObserver() {
+    if (typeof ResizeObserver === 'undefined') return;
+    
+    const scaleContainer = document.getElementById('autoScaleContainer');
+    const scaleContent = document.getElementById('scaleContent');
+    
+    if (!scaleContainer || !scaleContent) return;
+    
+    const observer = new ResizeObserver(entries => {
+        autoFitContent();
+    });
+    
+    // Observe both container and content
+    observer.observe(scaleContainer);
+    observer.observe(scaleContent);
+}
+
+/**
+ * Auto-fit content to container
+ */
+function autoFitContent() {
+    const container = document.getElementById('autoScaleContainer');
+    const content = document.getElementById('scaleContent');
+    
+    if (!container || !content) return;
+    
+    // Get current actual dimensions
+    const containerRect = container.getBoundingClientRect();
+    
+    // Reset scale to measure true size
+    content.style.transform = 'scale(1)';
+    const contentRect = content.getBoundingClientRect();
+    
+    // Calculate scale factors
+    const scaleX = containerRect.width / contentRect.width;
+    const scaleY = containerRect.height / contentRect.height;
+    
+    // Use the smaller scale factor to ensure content fits within container
+    const scale = Math.min(scaleX, scaleY, 1);
+    
+    // Apply scale
+    content.style.transform = `scale(${scale})`;
+    
+    // Store original scale for zoom controls
+    content.setAttribute('data-original-scale', scale);
+}
+
+/**
+ * Add zoom controls functionality
+ */
+function addZoomControls() {
+    const contentPanel = document.getElementById('contentPanel');
+    if (!contentPanel) return;
+    
+    const zoomIn = contentPanel.querySelector('.zoom-in');
+    const zoomOut = contentPanel.querySelector('.zoom-out');
+    const zoomReset = contentPanel.querySelector('.zoom-reset');
+    const scaleContent = document.getElementById('scaleContent');
+    
+    if (!zoomIn || !zoomOut || !zoomReset || !scaleContent) return;
+    
+    // Zoom factors
+    const zoomFactor = 0.1;
+    let currentScale = 1;
+    
+    zoomIn.addEventListener('click', function() {
+        currentScale += zoomFactor;
+        applyZoom(currentScale);
+    });
+    
+    zoomOut.addEventListener('click', function() {
+        currentScale = Math.max(0.1, currentScale - zoomFactor);
+        applyZoom(currentScale);
+    });
+    
+    zoomReset.addEventListener('click', function() {
+        currentScale = 1;
+        autoFitContent();
+    });
+    
+    function applyZoom(scale) {
+        const origScale = parseFloat(scaleContent.getAttribute('data-original-scale') || '1');
+        scaleContent.style.transform = `scale(${origScale * scale})`;
+    }
+    
+    // Add mouse wheel zoom support
+    scaleContent.addEventListener('wheel', function(e) {
+        if (e.ctrlKey) {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                currentScale += zoomFactor;
+            } else {
+                currentScale = Math.max(0.1, currentScale - zoomFactor);
+            }
+            applyZoom(currentScale);
+        }
+    }, { passive: false });
+}
