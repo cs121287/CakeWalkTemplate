@@ -2,30 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cake Walk Baking Co.</title>
+    
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="css/common.css">
+    
+    <!-- CSS Files -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/3d-carousel.css">
+    <link rel="stylesheet" href="css/mobile/modal.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Scripts -->
+    <script src="js/device-detector.js"></script>
     <script src="js/main.js" defer></script>
     <script src="js/3d-carousel.js" defer></script>
+    <script src="js/mobile-menu.js" defer></script>
 </head>
 <body>
     <div class="parallax-bg"></div>
 
-    <header>
+    <!-- Mobile-optimized Header -->
+    <header class="mobile-header">
         <div class="header-container">
+            <div class="menu-icon" id="menuToggle" aria-label="Open menu">
+                <i class="fas fa-bars"></i>
+            </div>
             <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
-            <nav>
-                <ul>
-                    <li><a href="#services" class="nav-link">Our Services</a></li>
-                    <li><a href="#products" class="nav-link">Our Products</a></li>
-                    <li><a href="#contact" class="nav-link">Contact Us</a></li>
-                    <li><a href="#footer" class="nav-link">Footer</a></li>
-                </ul>
-            </nav>
+            <div class="header-action">
+                <a href="#contact" class="action-button" aria-label="Contact us">
+                    <i class="fas fa-phone"></i>
+                </a>
+            </div>
         </div>
     </header>
+    
+    <!-- Mobile Side Navigation -->
+    <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <div class="nav-header">
+            <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="nav-logo">
+            <div class="close-menu" id="closeMenu" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <ul>
+            <li><a href="#services" class="nav-link"><i class="fas fa-concierge-bell"></i> Our Services</a></li>
+            <li><a href="#products" class="nav-link"><i class="fas fa-birthday-cake"></i> Our Products</a></li>
+            <li><a href="#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact Us</a></li>
+            <li><a href="#footer" class="nav-link"><i class="fas fa-info-circle"></i> About Us</a></li>
+        </ul>
+        <div class="nav-footer">
+            <a href="tel:5551234567" class="nav-contact-btn">
+                <i class="fas fa-phone"></i> (555) 123-4567
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Overlay for when menu is open -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
     <main class="snap-container">
         <section id="services" class="snap-section" tabindex="0">
             <div class="section-content animate-on-scroll">
@@ -47,8 +86,7 @@
         <section id="products" class="snap-section" tabindex="0">
             <div class="section-content animate-on-scroll">
                 <h2 class="section-title animated-title">Our Products</h2>
-				<h3>Click on a product for more details</h3>
-				
+                <h3>Click on a product for more details</h3>
                 
                 <!-- 3D Carousel for Products -->
                 <div class="carousel-container">
@@ -148,13 +186,13 @@
                 <div class="contact-container">
                     <div class="contact-info">
                         <h3>Visit Us</h3>
-                        <p>123 Baker Street</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Baker Street</p>
                         <p>Sweetville, CA 90210</p>
-                        <p>Phone: (555) 123-4567</p>
+                        <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <h3>Hours of Operation</h3>
-                        <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-                        <p>Saturday: 9:00 AM - 5:00 PM</p>
-                        <p>Sunday: Closed</p>
+                        <p><i class="far fa-clock"></i> Monday - Friday: 8:00 AM - 6:00 PM</p>
+                        <p><i class="far fa-clock"></i> Saturday: 9:00 AM - 5:00 PM</p>
+                        <p><i class="far fa-clock"></i> Sunday: Closed</p>
                         <div class="map-container">
                             <iframe
                                 width="100%"
@@ -192,19 +230,40 @@
             </div>
         </section>
 
-        <!-- Footer as a snapped section -->
+        <!-- Mobile-optimized footer -->
         <section id="footer" class="snap-section" tabindex="0">
-            <footer>
-                <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
-                <p>&copy; 2025 Cake Walk Baking Co. All rights reserved.</p>
+            <footer class="mobile-footer">
+                <div class="footer-content">
+                    <img src="img/logo.png" alt="Cake Walk Baking Co. Logo" class="logo">
+                    <div class="footer-contact">
+                        <a href="tel:5551234567" class="footer-btn">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                        <a href="#contact" class="footer-btn">
+                            <i class="fas fa-envelope"></i> Message
+                        </a>
+                    </div>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                    <p>&copy; 2025 Cake Walk Baking Co. All rights reserved.</p>
+                </div>
             </footer>
         </section>
     </main>
 
+    <!-- Modal with mobile optimizations -->
     <div id="imageModal" class="modal">
-        <span class="close">&times;</span>
+        <span class="close" aria-label="Close modal">&times;</span>
         <img class="modal-content" id="modalImage">
         <div id="modalCaption" class="modal-caption"></div>
     </div>
+    
+    <!-- Back to top button for mobile -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 </body>
 </html>
