@@ -100,6 +100,21 @@
     }
     
     /**
+     * Load proper JavaScript files based on device type
+     */
+    function loadDeviceScripts(deviceType) {
+        if (deviceType === 'desktop') {
+            // Ensure desktop-panel.js is loaded
+            if (!document.querySelector('script[src="js/desktop-panel.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'js/desktop-panel.js';
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+        }
+    }
+    
+    /**
      * Load stylesheets for the appropriate device type
      */
     async function loadStylesheets() {
@@ -128,6 +143,9 @@
         // Add a data attribute to the HTML element for potential JS usage
         document.documentElement.setAttribute('data-device', deviceType);
         document.documentElement.classList.add(deviceType);
+        
+        // Load device-specific scripts
+        loadDeviceScripts(deviceType);
     }
     
     /**
@@ -162,6 +180,16 @@
                 link.classList.add('device-specific-css');
                 document.head.appendChild(link);
             });
+            
+            // Load device-specific scripts
+            loadDeviceScripts(newDeviceType);
+            
+            // Reload the page to ensure proper initialization
+            if (currentDeviceType !== '') {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
+            }
         }
     }
     

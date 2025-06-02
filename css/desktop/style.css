@@ -1,4 +1,4 @@
-/* Desktop styles for Cake Walk Baking Co. */
+/* Desktop styles for Cake Walk Baking Co. - Modal Panel Layout */
 :root {
   /* Desktop-specific spacing */
   --spacing-xs: 0.4rem;
@@ -21,14 +21,14 @@
   --shadow-md: 0 0.3em 0.6em rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 0.5em 1em rgba(0, 0, 0, 0.2);
   
-  /* Layout - Updated for accordion sidebar */
-  --header-height: 0; /* No top header in new design */
+  /* Layout - Updated for non-scrolling modal panel */
   --sidebar-width: 250px;
-  --content-max-width: 56em;
+  --content-max-width: 800px;
 }
 
 body {
   font-size: var(--font-size-base);
+  overflow: hidden; /* Prevent body scrolling */
 }
 
 /* Hide mobile-specific elements */
@@ -39,81 +39,92 @@ body {
   display: none !important;
 }
 
-/* SNAP SCROLLING - Adjusted for sidebar layout */
+/* Hide snap sections - they'll be shown in the content panel instead */
 .snap-container {
-  position: absolute;
-  left: var(--sidebar-width);
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: calc(100vw - var(--sidebar-width));
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  z-index: 1;
-  background: transparent;
+  display: none;
 }
 
-.snap-container::-webkit-scrollbar { display: none; }
-.snap-container { scrollbar-width: none; -ms-overflow-style: none; }
+/* NEW CONTENT PANEL */
+.content-panel {
+  position: fixed;
+  left: calc(var(--sidebar-width) + 20px);
+  right: 20px;
+  top: 20px;
+  bottom: 20px;
+  background: var(--color-background-light);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
+  backdrop-filter: blur(10px);
+  transition: transform 0.5s var(--easing-smooth), opacity 0.5s var(--easing-smooth);
+  opacity: 0;
+  transform: translateY(20px);
+  display: none;
+  z-index: 5;
+}
 
-.snap-section {
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  height: 100vh;
-  max-height: 100vh;
+.content-panel.active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+/* Panel header */
+.panel-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 230, 230, 0.95);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(5px);
+  z-index: 2;
+}
+
+.panel-title {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.panel-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: center;
-  position: relative;
-  background: transparent;
-  box-sizing: border-box;
-  overflow: hidden;
-  z-index: 1;
-  padding: 2rem;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.panel-close:hover {
+  background: rgba(255, 102, 102, 0.15);
+  color: var(--color-primary);
+}
+
+/* Panel content */
+.panel-content {
+  padding: var(--spacing-md);
+  overflow: auto;
+  height: calc(100% - 70px); /* Height minus header */
 }
 
 /* SECTION CONTENT */
 .section-content {
-  max-width: var(--content-max-width);
-  width: 100%;
-  margin: 0 auto;
-  opacity: 0;
-  transform: translateY(1.25em);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  background: var(--color-background-light);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  backdrop-filter: blur(5px);
-  box-sizing: border-box;
-}
-
-#products .section-content {
-  max-width: var(--content-max-width);
   width: 100%;
   margin: 0 auto;
   padding: var(--spacing-md);
   box-sizing: border-box;
-  border-radius: var(--border-radius-md);
-  background: var(--color-background-light);
-  backdrop-filter: blur(5px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-.section-title {
-  text-align: center;
-  color: var(--color-primary-dark);
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-lg);
-}
-
+/* Services section */
 .services-container {
   display: flex;
   flex-direction: row;
@@ -176,7 +187,6 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
   position: relative;
-  z-index: 2;
   width: 100%;
   box-sizing: border-box;
 }
@@ -229,52 +239,28 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-/* Back to top button */
-.back-to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  z-index: 100;
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.back-to-top:hover {
-  background-color: var(--color-primary-dark);
-  transform: translateY(-3px);
+/* Product section */
+#product-content .section-title {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
 }
 
 /* Responsive adjustments for various desktop sizes */
 /* Medium desktops */
 @media (min-width: 1024px) and (max-width: 1440px) {
-  .section-content, 
-  #products .section-content {
-    max-width: 85%;
+  .content-panel {
+    left: calc(var(--sidebar-width) + 30px);
+    right: 30px;
   }
 }
 
 /* Large desktops */
 @media (min-width: 1441px) {
-  .section-content, 
-  #products .section-content {
-    max-width: 70%;
+  .content-panel {
+    left: calc(var(--sidebar-width) + 50px);
+    right: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 
@@ -284,8 +270,11 @@ body {
     --sidebar-width: 220px;
   }
   
-  .section-content {
-    padding: var(--spacing-sm);
+  .content-panel {
+    left: calc(var(--sidebar-width) + 15px);
+    right: 15px;
+    top: 15px;
+    bottom: 15px;
   }
   
   .contact-container {
@@ -298,16 +287,11 @@ body {
   }
 }
 
-/* When sidebar is collapsed (for future feature) */
-.sidebar-collapsed .snap-container {
-  left: 60px;
-  width: calc(100vw - 60px);
-}
-
 /* Fix focus states for accessibility */
 .submit-btn:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+.panel-close:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
 }

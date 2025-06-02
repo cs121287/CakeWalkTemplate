@@ -134,6 +134,14 @@
 .modal-close-btn {
     background-color: var(--color-primary);
     color: var(--color-white);
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.2s;
 }
 
 .modal-close-btn:hover {
@@ -208,6 +216,11 @@
     animation: captionSlideIn 0.5s 0.1s ease forwards;
 }
 
+/* Adjustments for the sidebar layout */
+.desktop .modal-content {
+    margin-left: calc(var(--sidebar-width) / 2);
+}
+
 /* Large desktop adjustments */
 @media (min-width: 1400px) {
     .modal-content {
@@ -234,11 +247,16 @@
     .modal-caption {
         width: 65vw;
     }
+    
+    .desktop .modal-content {
+        margin-left: calc(var(--sidebar-width) / 3);
+    }
 }
 
 /* Keyboard focus styles for accessibility */
 .close:focus-visible,
 .modal-btn:focus-visible,
+.modal-close-btn:focus-visible,
 .modal-nav-btn:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 3px;

@@ -18,7 +18,7 @@
     <script src="js/main.js" defer></script>
     <script src="js/3d-carousel.js" defer></script>
     <script src="js/mobile-menu.js" defer></script>
-	<script src="js/desktop-nav.js" defer></script>
+    <script src="js/desktop-panel.js" defer></script>
 </head>
 <body>
     <div class="parallax-bg"></div>
@@ -38,7 +38,7 @@
         </div>
     </header>
     
-    <!-- NEW DESKTOP ACCORDION SIDEBAR (will only display on desktop) -->
+    <!-- DESKTOP ACCORDION SIDEBAR (will only display on desktop) -->
     <div class="left-menu desktop-only">
         <div class="logo">
             <img src="img/logo.png" alt="Cake Walk Baking Co. Logo">
@@ -128,7 +128,7 @@
     <!-- Overlay for when menu is open -->
     <div class="nav-overlay" id="navOverlay"></div>
 
-    <!-- Main content with sidebar margin adjustment -->
+    <!-- Main content with sections (only visible on mobile) -->
     <main class="snap-container desktop-main">
         <!-- The rest of your sections remain unchanged -->
         <section id="services" class="snap-section" tabindex="0">
@@ -334,17 +334,12 @@
             </footer>
         </section>
     </main>
-
+    
     <!-- Modal with mobile optimizations -->
     <div id="imageModal" class="modal">
         <span class="close" aria-label="Close modal">&times;</span>
         <img class="modal-content" id="modalImage">
         <div id="modalCaption" class="modal-caption"></div>
     </div>
-    
-    <!-- Back to top button -->
-    <button id="backToTop" class="back-to-top" aria-label="Back to top">
-        <i class="fas fa-chevron-up"></i>
-    </button>
 </body>
 </html>
