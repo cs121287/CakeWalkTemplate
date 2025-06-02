@@ -1,0 +1,249 @@
+/* Mobile Animations */
+:root {
+  /* Animation timing - mobile optimized */
+  --animation-duration-short: 0.25s;
+  --animation-duration-medium: 0.4s;
+  --animation-duration-long: 0.8s;
+  --animation-delay-short: 0.1s;
+  --animation-delay-medium: 0.15s;
+  
+  /* Animation easing */
+  --easing-standard: ease;
+  --easing-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+  --easing-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Animation distances - mobile specific */
+  --animation-distance-sm: 5px;
+  --animation-distance-md: 10px;
+  --animation-distance-lg: 20px;
+  
+  /* Light effect sizes - smaller for mobile */
+  --light-effect-size: 80px;
+}
+
+/* Animation styles optimized for mobile */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(var(--animation-distance-lg));
+    transition: opacity var(--animation-duration-medium) ease-out, 
+                transform var(--animation-duration-medium) ease-out;
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modal animations */
+.modal {
+    transition: opacity var(--animation-duration-short) ease-in-out;
+    opacity: 0;
+    will-change: opacity;
+}
+
+.modal.modal-open {
+    opacity: 1;
+}
+
+/* Product card hover/touch effect - Mobile optimized */
+.product-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--animation-duration-short) var(--easing-bounce), 
+                box-shadow var(--animation-duration-short) var(--easing-standard);
+    will-change: transform, box-shadow;
+}
+
+.product-card::after {
+    content: '';
+    position: absolute;
+    width: var(--light-effect-size);
+    height: var(--light-effect-size);
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    top: var(--mouse-y, 0);
+    left: var(--mouse-x, 0);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--animation-duration-short);
+    will-change: opacity, transform;
+    z-index: 1;
+}
+
+/* Use active for touch devices */
+.product-card:hover::after,
+.product-card:active::after {
+    opacity: 1;
+    animation: moveLightEffect 1.5s infinite alternate;
+}
+
+@keyframes moveLightEffect {
+    0% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Form animations - mobile optimized */
+.form-group {
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.form-group label {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    transition: all var(--animation-duration-short) var(--easing-standard);
+    pointer-events: none;
+    font-size: 0.9rem;
+    color: #666;
+    background: white;
+    padding: 0 0.4rem;
+    will-change: transform, font-size, color;
+}
+
+.form-group.focused label {
+    top: -0.6rem;
+    left: 0.4rem;
+    font-size: 0.7rem;
+    color: var(--color-primary);
+}
+
+.error-message {
+    color: var(--color-error);
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: all var(--animation-duration-short) var(--easing-standard);
+    will-change: opacity, transform;
+}
+
+.form-group.invalid .error-message {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Success message animation */
+.success-message {
+    background-color: var(--color-success);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-top: 0.75rem;
+    animation: slideIn var(--animation-duration-short) ease-out;
+    will-change: transform, opacity;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Navigation highlight effect - mobile optimized */
+nav a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1.5px;
+    background: var(--color-primary);
+    transition: width var(--animation-duration-short);
+    will-change: width;
+}
+
+nav a:hover::after,
+nav a:active::after {
+    width: 100%;
+}
+
+/* Active section indicator */
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Mobile-optimized typing cursor animation */
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.typing::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+}
+
+/* Mobile-optimized scroll indicator */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-7px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+.scroll-indicator {
+    animation: bounce 2s infinite;
+    will-change: transform;
+}
+
+/* Float animation - reduced for mobile performance */
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.swiper.product-swiper .swiper-slide-active {
+    animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* Optimize animations for lower power devices */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .animate-on-scroll {
+        opacity: 1;
+        transform: none;
+    }
+    
+    .carousel-container {
+        perspective: none;
+    }
+    
+    #product-carousel {
+        animation: none;
+    }
+}
