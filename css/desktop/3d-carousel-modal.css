@@ -6,6 +6,7 @@
   perspective: 1000px;
   margin: 0 auto;
   transform-style: preserve-3d;
+  overflow: visible; /* Ensure all cards can be seen */
 }
 
 /* Panel Product Carousel */
@@ -15,6 +16,7 @@
   position: absolute;
   transform-style: preserve-3d;
   transform: translateZ(-400px);
+  animation: modalRotation 30s infinite linear;
 }
 
 .content-panel #panel-product-carousel figure {
@@ -35,6 +37,26 @@
   transition: transform 0.5s ease, box-shadow 0.5s ease;
   border: 5px solid white;
   backface-visibility: visible;
+}
+
+/* Ensure proper 3D positioning for all 6 cards */
+.content-panel #panel-product-carousel figure:nth-child(1) { 
+  transform: rotateY(0deg) translateZ(250px); 
+}
+.content-panel #panel-product-carousel figure:nth-child(2) { 
+  transform: rotateY(60deg) translateZ(250px); 
+}
+.content-panel #panel-product-carousel figure:nth-child(3) { 
+  transform: rotateY(120deg) translateZ(250px); 
+}
+.content-panel #panel-product-carousel figure:nth-child(4) { 
+  transform: rotateY(180deg) translateZ(250px); 
+}
+.content-panel #panel-product-carousel figure:nth-child(5) { 
+  transform: rotateY(240deg) translateZ(250px); 
+}
+.content-panel #panel-product-carousel figure:nth-child(6) { 
+  transform: rotateY(300deg) translateZ(250px); 
 }
 
 .content-panel #panel-product-carousel figure img {
